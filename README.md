@@ -117,4 +117,3 @@ Screenshots of the running stack are in [`evidence/`](evidence/) (app, `/metrics
 - It provided guidance on testing the system, capturing screenshots, exporting the dashboard, and pushing the project to GitHub.
 
 **Impact:** Claude was used as a supporting tool for guidance, suggestions, and debugging during development. I was responsible for setting up, running, testing, and verifying the complete monitoring stack on my machine. I tested both single and bulk modes using real images, checked Prometheus targets, verified that alerts reached Alertmanager, and captured the screenshots and demo video from the running system. All reported metrics and dashboard results were obtained from actual executions of the project.
-"""
