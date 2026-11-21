@@ -104,4 +104,4 @@ How the dashboard follows the Seven Commandments:
 
 ## Evidence
 
-Screenshots of the running stack are in [`evidence/`](evidence/) (app, `/metrics`, node_exporter, Prometheus targets and alerts, Alertmanager/webhook, Grafana rows). The dashboard video is `evidence/dashboard_demo.mp4`, about 1 minute at a 5 s refresh.
+Screenshots of the running stack are in [`evidence/`](evidence/) (app, `/metrics`, node_exporter, Prometheus targets and alerts, Alertmanager/webhook, Grafana rows). The dashboard video (about 1 minute, 5 s refresh) was submitted through the course Google Form.
