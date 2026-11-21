@@ -101,3 +101,7 @@ How the dashboard follows the Seven Commandments:
 - **A story for each panel:** each panel has a description (ⓘ), and a "How to read" note sits at the top of the dashboard.
 
 **For the video:** set the time range to *Last 5 minutes* with a 5 s refresh. Caption a few single images, then upload the sample ZIP. The bulk plateau in ② should line up with the CPU rise in ⑤ and ⑥.
+
+## Evidence
+
+Screenshots of the running stack are in [`evidence/`](evidence/) (app, `/metrics`, node_exporter, Prometheus targets and alerts, Alertmanager/webhook, Grafana rows). The dashboard video is `evidence/dashboard_demo.mp4`, about 1 minute at a 5 s refresh.
