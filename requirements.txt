@@ -1,0 +1,5 @@
+streamlit>=1.45
+prometheus_client>=0.20
+transformers>=4.40,<5
+pillow
+pandas

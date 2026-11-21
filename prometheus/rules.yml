@@ -1,0 +1,85 @@
+groups:
+ - name: recording-rules
+   rules:
+   - record: node:cpu_busy:percent
+     expr: 100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[30s])))
+   - record: node:memory_used:percent
+     expr: 100 * (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)
+   - record: app:images_per_second:rate30s
+     expr: sum by (mode) (rate(caption_images_processed_total{status="success"}[30s]))
+   - record: app:inference_p95:seconds
+     expr: histogram_quantile(0.95, sum by (le, mode) (rate(caption_inference_seconds_bucket[1m])))
+   - record: app:error_ratio
+     expr: sum(rate(caption_images_processed_total{status="failed"}[1m])) / clamp_min(sum(rate(caption_images_processed_total[1m])), 1e-9)
+
+ - name: availability
+   rules:
+   - alert: CaptionAppDown
+     expr: up{job="python_app"} == 0
+     for: 10s
+     labels:
+       severity: critical
+     annotations:
+       summary: "Captioning app metrics endpoint is down"
+   - alert: NodeExporterDown
+     expr: up{job="node"} == 0
+     for: 10s
+     labels:
+       severity: critical
+     annotations:
+       summary: "node_exporter is down"
+
+ - name: application
+   rules:
+   - alert: HighInferenceLatency
+     expr: app:inference_p95:seconds > 5
+     for: 30s
+     labels:
+       severity: warning
+     annotations:
+       summary: "p95 inference latency above 5s ({{ $labels.mode }} mode)"
+   - alert: HighCaptionErrorRate
+     expr: app:error_ratio > 0.1
+     for: 30s
+     labels:
+       severity: warning
+     annotations:
+       summary: "More than 10% of images are failing"
+   - alert: BulkBacklog
+     expr: caption_bulk_queue_remaining > 100
+     for: 1m
+     labels:
+       severity: warning
+     annotations:
+       summary: "More than 100 images waiting in bulk jobs"
+   - alert: AppMemoryHigh
+     expr: process_resident_memory_bytes{job="python_app"} > 3e9
+     for: 1m
+     labels:
+       severity: warning
+     annotations:
+       summary: "Captioning app RSS above 3 GB"
+
+ - name: node
+   rules:
+   - alert: HighCPUUsage
+     expr: node:cpu_busy:percent > 85
+     for: 30s
+     labels:
+       severity: warning
+     annotations:
+       summary: "Node CPU busy above 85% for 30s"
+   - alert: HighMemoryUsage
+     expr: node:memory_used:percent > 90
+     for: 1m
+     labels:
+       severity: critical
+     annotations:
+       summary: "Node memory usage above 90%"
+   - alert: DiskAlmostFull
+     expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} < 0.10
+     for: 5m
+     labels:
+       severity: warning
+     annotations:
+       summary: "Less than 10% disk space left on /"

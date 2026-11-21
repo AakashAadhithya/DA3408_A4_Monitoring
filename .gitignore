@@ -1,0 +1,6 @@
+bin/
+data/
+logs/
+.venv/
+__pycache__/
+*.zip
